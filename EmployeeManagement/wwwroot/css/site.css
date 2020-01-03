@@ -1,5 +1,9 @@
-﻿body {
-}
+﻿
 .btn {
 width:75px;
+}
+
+.imageThumnail {
+height:200px;
+width:auto;
 }
