@@ -1,5 +1,6 @@
 ﻿using EmployeeManagement.Models;
 using EmployeeManagement.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,7 @@ namespace EmployeeManagement.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
+        [AllowAnonymous]
         public ViewResult Index()
         {
             var model = _employeeRepository.GetAllEmployees();
@@ -28,9 +30,10 @@ namespace EmployeeManagement.Controllers
         }
 
         [Route("Home/Details/{id=1}")]
+        [AllowAnonymous]
         public ViewResult details(int id)
         {
-            throw new Exception("Manual exception");
+            //throw new Exception("Manual exception");
             Employee model = _employeeRepository.GetEmployee(id);
             if (model == null)
             {
@@ -43,11 +46,13 @@ namespace EmployeeManagement.Controllers
             }
         }
         [HttpGet]
+        [Authorize]
         public ViewResult Create()
         {
             return View();
         }
         [HttpPost]
+        [Authorize]
         public IActionResult Create(EmployeeCreateViewModel model)
         {
             if (ModelState.IsValid)
@@ -77,6 +82,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Edit(int id)
         {
             Employee employee = _employeeRepository.GetEmployee(id);
@@ -92,6 +98,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Edit(EmployeeEditViewModel model)
         {
             if (ModelState.IsValid)
