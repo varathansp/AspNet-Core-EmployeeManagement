@@ -5,7 +5,28 @@
 }
 
 <h1>All Roles</h1>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+</script>
 
+<!-- jQuery code to show the working of this method -->
+<script>
+    $(document).ready(function () {
+        function confirmDelete(uniqueId, isDeleteClicked) {
+            alert("Hi");
+            var deleteSpan = 'deleteSpan_' + uniqueId;
+            var confirmDeleteSpan = 'confirmDeleteSpan_' + uniqueId;
+
+            if (isDeleteClicked) {
+                $('#' + deleteSpan).hide();
+                $('#' + confirmDeleteSpan).show();
+            } else {
+                $('#' + deleteSpan).show();
+                $('#' + confirmDeleteSpan).hide();
+            }
+        }
+
+    });
+</script>
 @if (Model.Any())
 {
     <a class="btn btn-primary mb-3" style="width:auto" asp-action="CreateRole"
@@ -21,9 +42,21 @@
                 <h5 class="card-title">@role.Name</h5>
             </div>
             <div class="card-footer">
-                <a class="btn btn-primary" asp-action="EditRole"
-                   asp-controller="Administration" asp-route-id="@role.Id">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <form asp-action="DeleteRole" asp-route-id="@role.Id" method="post">
+                    <a asp-action="EditRole" asp-controller="Administration"
+                       asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
+                    <span id="confirmDeleteSpan_@role.Id" style="display:none">
+                        <span>Are you sure you want to delete?</span>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                        <a href="#" class="btn btn-primary"
+                           onclick="confirmDelete('@role.Id', false)">No</a>
+                    </span>
+
+                    <span id="deleteSpan_@role.Id">
+                        <a href="#" class="btn btn-danger"
+                           onclick="confirmDelete('@role.Id', true)">Delete</a>
+                    </span>
+                </form>
             </div>
         </div>
     }
@@ -44,4 +77,7 @@ else
             </a>
         </div>
     </div>
+}
+@section Scripts{
+    <script src="~/Js/CustomJavaScript.js"></script>
 }
