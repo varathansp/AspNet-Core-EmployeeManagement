@@ -30,13 +30,18 @@ namespace EmployeeManagement
             services.AddDbContextPool<AppDbContext>(options=>
             options.UseSqlServer(_config.GetConnectionString("EmployeeDBConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 7;
                 options.Password.RequiredUniqueChars = 1;
                 options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedEmail = true;
+
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             });
 
             services.AddAuthentication().AddGoogle(options=> {
@@ -46,6 +51,7 @@ namespace EmployeeManagement
 
             services.ConfigureApplicationCookie(options =>
             {
+                
                 options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
             });
 
