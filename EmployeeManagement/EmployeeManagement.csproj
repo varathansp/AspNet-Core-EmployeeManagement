@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <UserSecretsId>7e85ddd8-1994-41f1-ba24-f8de8972eb1c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

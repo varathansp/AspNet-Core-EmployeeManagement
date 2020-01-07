@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<IdentityRole>
-
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService;
 @{
     ViewBag.Title = "All Roles";
 }
@@ -11,6 +12,9 @@
 <!-- jQuery code to show the working of this method -->
 <script>
     $(document).ready(function () {
+
+
+
         function confirmDelete(uniqueId, isDeleteClicked) {
             alert("Hi");
             var deleteSpan = 'deleteSpan_' + uniqueId;
@@ -42,21 +46,24 @@
                 <h5 class="card-title">@role.Name</h5>
             </div>
             <div class="card-footer">
-                <form asp-action="DeleteRole" asp-route-id="@role.Id" method="post">
-                    <a asp-action="EditRole" asp-controller="Administration"
-                       asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
-                    <span id="confirmDeleteSpan_@role.Id" style="display:none">
-                        <span>Are you sure you want to delete?</span>
-                        <button type="submit" class="btn btn-danger">Yes</button>
-                        <a href="#" class="btn btn-primary"
-                           onclick="confirmDelete('@role.Id', false)">No</a>
-                    </span>
+                @if ((await authorizationService.AuthorizeAsync(User, "EditDeleteRolePolicy")).Succeeded)
+                {
+                    <form asp-action="DeleteRole" asp-route-id="@role.Id" method="post">
+                        <a asp-action="EditRole" asp-controller="Administration"
+                           asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
+                        <span id="confirmDeleteSpan_@role.Id" style="display:none">
+                            <span>Are you sure you want to delete?</span>
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a href="#" class="btn btn-primary"
+                               onclick="confirmDelete('@role.Id', false)">No</a>
+                        </span>
 
-                    <span id="deleteSpan_@role.Id">
-                        <a href="#" class="btn btn-danger"
-                           onclick="confirmDelete('@role.Id', true)">Delete</a>
-                    </span>
-                </form>
+                        <span id="deleteSpan_@role.Id">
+                            <a href="#" class="btn btn-danger"
+                               onclick="confirmDelete('@role.Id', true)">Delete</a>
+                        </span>
+                    </form>
+                }
             </div>
         </div>
     }
